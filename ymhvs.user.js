@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         Yandex Music Horizontal Volume Scroll
-// @namespace    http://tampermonkey.net/
+// @namespace    ymhvs
 // @version      1.0.0
 // @description  A userscript to bring back the good old horizontal volume slider.
 // @author       Snitsky
 // @match        *://music.yandex.ru/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=yandex.ru
+// @homepageURL  https://github.com/ksnitsky/Yandex-Music-Horizontal-Volume-Scroll
+// @downloadURL  https://raw.githubusercontent.com/ksnitsky/Yandex-Music-Horizontal-Volume-Scroll/main/ymhvs.user.js
+// @updateURL    https://raw.githubusercontent.com/ksnitsky/Yandex-Music-Horizontal-Volume-Scroll/main/ymhvs.user.js
 // @grant        none
 // ==/UserScript==
 
