@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yandex Music Horizontal Volume Scroll
 // @namespace    ymhvs
-// @version      1.1.0
+// @version      1.2.0
 // @description  A userscript to bring back the good old horizontal volume slider and position of like/dislike buttons.
 // @author       Snitsky
 // @match        *://music.yandex.ru/*
@@ -90,6 +90,47 @@
   });
 
   controlsObserver.observe(document.body, { childList: true, subtree: true });
+
+  let skipDislikeConfirm = false;
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      const dislikeButton = e.target.closest(
+        'button[aria-label="I don\'t like it"]',
+      );
+      if (dislikeButton) {
+        if (!skipDislikeConfirm && !confirm("Вы уверены, что хотите добавить трек в дизлайки?")) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          console.log("[YMHVS] Dislike отменён");
+        } else {
+          console.log("[YMHVS] Dislike подтверждён");
+        }
+      }
+    },
+    true,
+  );
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "d" || e.key === "D") {
+      const dislikeButton = document.querySelector(
+        'button[aria-label="I don\'t like it"]',
+      );
+      if (dislikeButton) {
+        if (!confirm("Вы уверены, что хотите добавить трек в дизлайки?")) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          console.log("[YMHVS] Dislike хоткей отменён");
+        } else {
+          console.log("[YMHVS] Dislike хоткей подтверждён");
+          skipDislikeConfirm = true;
+          dislikeButton.click();
+          skipDislikeConfirm = false;
+        }
+      }
+    }
+  });
 
   console.log("[YMHVS] Скрипт запущен, ожидание элементов DOM...");
 })();
