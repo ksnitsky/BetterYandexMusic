@@ -76,10 +76,12 @@
       <button
         class="bym-dialog__close"
         type="button"
-        aria-label="×"
+        aria-label={messages.close}
         onclick={onclose}
       >
-        ×
+        <svg focusable="false" aria-hidden="true">
+          <use href="/icons/sprite.svg#close_xxs"></use>
+        </svg>
       </button>
     </header>
 

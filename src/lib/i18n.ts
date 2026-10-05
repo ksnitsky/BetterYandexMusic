@@ -17,6 +17,7 @@ export interface Messages {
   statusImported: string;
   statusImportError: string;
   statusReset: string;
+  close: string;
   tweaks: Record<TweakId, TweakText>;
 }
 
@@ -31,6 +32,7 @@ export const MESSAGES: Record<Lang, Messages> = {
     statusImported: 'Настройки импортированы',
     statusImportError: 'Не удалось импортировать: некорректный файл',
     statusReset: 'Настройки сброшены по умолчанию',
+    close: 'Закрыть',
     tweaks: {
       volumeSlider: {
         label: 'Горизонтальный слайдер громкости',
@@ -56,6 +58,7 @@ export const MESSAGES: Record<Lang, Messages> = {
     statusImported: 'Settings imported',
     statusImportError: 'Import failed: invalid file',
     statusReset: 'Reset to defaults',
+    close: 'Close',
     tweaks: {
       volumeSlider: {
         label: 'Horizontal volume slider',
