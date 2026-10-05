@@ -3,53 +3,68 @@ import SettingsSection from './SettingsSection.svelte';
 import { createShadowHost } from './mount';
 import { detectLang } from '../lib/i18n';
 
-const CONTENT_SELECTOR = '[class*="SettingsPage_content"]';
 const LIST_SELECTOR = 'ul[class*="Settings_root"]';
-const TITLE_SELECTOR =
-  '[class*="SettingsListToggleItem_title"], [class*="SettingsListButtonItem_title"]';
-const DESC_SELECTOR =
-  '[class*="SettingsListToggleItem_description"], [class*="SettingsListButtonItem_description"]';
+const SWITCH_SELECTOR = 'button[role="switch"]';
+const TITLE_SELECTOR = '[class*="SettingsListToggleItem_title"]';
+const DESC_SELECTOR = '[class*="SettingsListToggleItem_description"]';
+const ROW_SELECTOR = '[class*="SettingsListToggleItem_root"]';
+const ITEM_SELECTOR = 'li[class*="Settings_item"]';
 
-let host: HTMLDivElement | null = null;
+let host: HTMLElement | null = null;
 let instance: Record<string, unknown> | null = null;
 
-function darkByLuminance(color: string): boolean {
-  const match = color.match(/rgba?\(([^)]+)\)/);
-  if (!match) return false;
-  const [r, g, b, a = 1] = match[1].split(',').map((part) => parseFloat(part));
-  if (a === 0) return false;
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
-}
+/**
+ * Copy the real settings rows' font metrics and the native switch geometry so
+ * the block blends in. Colors come from YM CSS vars (app.css), which stay in
+ * sync with the theme automatically; font geometry does not change with theme.
+ */
+function sampleMetrics(): Record<string, string> {
+  const vars: Record<string, string> = {};
+  const q = (selector: string) => document.querySelector<HTMLElement>(selector);
 
-function backgroundColorOf(node: Element | null): string {
-  let el = node;
-  while (el) {
-    const color = getComputedStyle(el).backgroundColor;
-    if (color && color !== 'transparent' && !/rgba\(\s*0,\s*0,\s*0,\s*0\s*\)/.test(color)) {
-      return color;
-    }
-    el = el.parentElement;
-  }
-  return 'rgb(255, 255, 255)';
-}
-
-/** Sample the surrounding settings UI so the block matches YM's current theme. */
-function themeVars(): Record<string, string> {
-  const title = document.querySelector(TITLE_SELECTOR);
-  const desc = document.querySelector(DESC_SELECTOR);
-  const dark = darkByLuminance(backgroundColorOf(document.querySelector(CONTENT_SELECTOR)));
-
-  const vars: Record<string, string> = {
-    '--bym-border': dark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.10)',
-    '--bym-bg-soft': dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
-  };
-
+  const title = q(TITLE_SELECTOR);
   if (title) {
-    const style = getComputedStyle(title);
-    vars['--bym-fg'] = style.color;
-    vars['--bym-font'] = style.fontFamily;
+    const s = getComputedStyle(title);
+    vars['--bym-label-size'] = s.fontSize;
+    vars['--bym-label-weight'] = s.fontWeight;
+    vars['--bym-label-lh'] = s.lineHeight;
   }
-  if (desc) vars['--bym-fg-dim'] = getComputedStyle(desc).color;
+
+  const desc = q(DESC_SELECTOR);
+  if (desc) {
+    const s = getComputedStyle(desc);
+    vars['--bym-desc-size'] = s.fontSize;
+    vars['--bym-desc-weight'] = s.fontWeight;
+    vars['--bym-desc-lh'] = s.lineHeight;
+  }
+
+  const row = q(ROW_SELECTOR);
+  if (row) {
+    const s = getComputedStyle(row);
+    vars['--bym-row-pad-top'] = s.paddingTop;
+    vars['--bym-row-pad-x'] = '0px';
+    vars['--bym-row-pad-bottom'] = '0px';
+  }
+
+  const item = q(ITEM_SELECTOR);
+  if (item) {
+    vars['--bym-row-pad-bottom'] = getComputedStyle(item).paddingBottom;
+  }
+
+  const sw = q(SWITCH_SELECTOR);
+  if (sw) {
+    const box = sw.getBoundingClientRect();
+    const knob = sw.querySelector<HTMLElement>('span > div, div');
+    const knobBox = knob?.getBoundingClientRect();
+    vars['--bym-switch-w'] = `${box.width}px`;
+    vars['--bym-switch-h'] = `${box.height}px`;
+    if (knobBox) {
+      const pad = (box.height - knobBox.height) / 2;
+      vars['--bym-switch-knob'] = `${knobBox.height}px`;
+      vars['--bym-switch-pad'] = `${pad}px`;
+      vars['--bym-switch-travel'] = `${box.width - knobBox.height - 2 * pad}px`;
+    }
+  }
 
   return vars;
 }
@@ -63,18 +78,23 @@ function destroy(): void {
   host = null;
 }
 
-function mountSection(anchor: Element, onopen: () => void): void {
-  const created = createShadowHost('betterym-settings');
-  // Let the shadow content participate in the page layout as if it were a
-  // direct child of the settings content container.
-  created.host.style.display = 'contents';
+function mountSection(list: Element, onopen: () => void): void {
+  // <li> can't host a shadow root, so wrap a div host in a display:contents
+  // <li>. Everything collapses, and the section stays inside the settings list
+  // (inheriting its width, spacing and font context).
+  const wrapper = document.createElement('li');
+  wrapper.style.display = 'contents';
 
-  for (const [name, value] of Object.entries(themeVars())) {
+  const created = createShadowHost('betterym-settings', 'div');
+  created.host.style.display = 'contents';
+  wrapper.appendChild(created.host);
+
+  for (const [name, value] of Object.entries(sampleMetrics())) {
     created.target.style.setProperty(name, value);
   }
 
-  anchor.after(created.host);
-  host = created.host;
+  list.appendChild(wrapper);
+  host = wrapper;
   instance = mount(SettingsSection, {
     target: created.target,
     props: { onopen, lang: detectLang() },
@@ -99,7 +119,7 @@ export function startSettingsPage(openSettings: () => void): void {
       return;
     }
 
-    if (host?.isConnected) return;
+    if (host?.isConnected && host.parentElement === list) return;
     if (host) destroy();
     mountSection(list, openSettings);
   };

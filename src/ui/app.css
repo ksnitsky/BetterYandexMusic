@@ -1,30 +1,39 @@
 .bym-root {
-  --bym-bg: #ffffff;
-  --bym-bg-soft: #f5f6f8;
-  --bym-fg: #1b1d21;
-  --bym-fg-dim: #6b7280;
-  --bym-border: rgba(0, 0, 0, 0.1);
-  --bym-accent: #ffcc00;
-  --bym-accent-fg: #1b1d21;
-  --bym-danger: #e54848;
-  --bym-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
-  --bym-radius: 16px;
-  --bym-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  /* Palette — pulled from Yandex Music CSS vars, which inherit into the shadow
+     root and update live when body switches ym-dark-theme / ym-light-theme. */
+  --bym-bg: var(--ym-background-color-primary-enabled-content, #ffffff);
+  --bym-bg-soft: var(--ym-controls-color-secondary-default-enabled, rgba(0, 0, 0, 0.07));
+  --bym-fg: var(--ym-controls-color-primary-text-enabled_variant, #1a1a1a);
+  --bym-fg-dim: var(--ym-controls-color-primary-text-enabled, #666666);
+  --bym-border: var(--ym-controls-color-secondary-outline-enabled_stroke, rgba(0, 0, 0, 0.3));
+  --bym-accent: var(--ym-controls-color-primary-default-enabled, #ffcc00);
+  --bym-accent-fg: var(--ym-controls-color-primary-on_default-enabled, #000000);
+  --bym-danger: var(--ym-message-color-error-text-enabled, #e54848);
+
+  --bym-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --bym-radius: var(--ym-radius-size-xl, 16px);
+  --bym-font: var(--ym-font-text, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif);
+
+  /* Metrics. Compact defaults for the modal; the settings-page block overrides
+     these inline from the real YM settings rows. */
+  --bym-label-size: 14px;
+  --bym-label-weight: 600;
+  --bym-label-lh: 1.35;
+  --bym-desc-size: 12px;
+  --bym-desc-weight: 400;
+  --bym-desc-lh: 1.4;
+  --bym-row-pad-top: 12px;
+  --bym-row-pad-bottom: 12px;
+  --bym-row-pad-x: 4px;
+  --bym-switch-w: 42px;
+  --bym-switch-h: 24px;
+  --bym-switch-knob: 18px;
+  --bym-switch-pad: 2px;
+  --bym-switch-travel: 18px;
 
   font-family: var(--bym-font);
   color: var(--bym-fg);
-}
-
-@media (prefers-color-scheme: dark) {
-  .bym-root {
-    --bym-bg: #1c1f24;
-    --bym-bg-soft: #262a31;
-    --bym-fg: #f2f3f5;
-    --bym-fg-dim: #9aa1ad;
-    --bym-border: rgba(255, 255, 255, 0.12);
-    --bym-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-  }
 }
 
 *,
@@ -43,7 +52,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--ym-background-color-primary-enabled-overlay, rgba(0, 0, 0, 0.5));
   backdrop-filter: blur(2px);
 }
 
@@ -118,12 +127,8 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 12px 4px;
+  padding: var(--bym-row-pad-top) var(--bym-row-pad-x) var(--bym-row-pad-bottom);
   cursor: pointer;
-}
-
-.bym-toggle + .bym-toggle {
-  border-top: 1px solid var(--bym-border);
 }
 
 .bym-toggle__text {
@@ -134,14 +139,16 @@
 }
 
 .bym-toggle__label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--bym-label-size);
+  font-weight: var(--bym-label-weight);
+  line-height: var(--bym-label-lh);
 }
 
 .bym-toggle__desc {
-  font-size: 12px;
+  font-size: var(--bym-desc-size);
+  font-weight: var(--bym-desc-weight);
+  line-height: var(--bym-desc-lh);
   color: var(--bym-fg-dim);
-  line-height: 1.4;
 }
 
 .bym-toggle input {
@@ -154,33 +161,31 @@
 .bym-switch {
   position: relative;
   flex: 0 0 auto;
-  width: 42px;
-  height: 24px;
+  width: var(--bym-switch-w);
+  height: var(--bym-switch-h);
   border-radius: 999px;
-  background: var(--bym-bg-soft);
-  border: 1px solid var(--bym-border);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  background: var(--ym-controls-color-secondary-default-enabled, var(--bym-bg-soft));
+  transition: background-color 0.3s ease;
 }
 
 .bym-switch::after {
   content: "";
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
+  top: var(--bym-switch-pad);
+  left: var(--bym-switch-pad);
+  width: var(--bym-switch-knob);
+  height: var(--bym-switch-knob);
   border-radius: 50%;
-  background: var(--bym-fg-dim);
-  transition: transform 0.15s ease, background 0.15s ease;
+  background: var(--ym-controls-color-secondary-on_default-enabled_variant, rgba(255, 255, 255, 0.64));
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .bym-toggle input:checked + .bym-switch {
   background: var(--bym-accent);
-  border-color: var(--bym-accent);
 }
 
 .bym-toggle input:checked + .bym-switch::after {
-  transform: translateX(18px);
+  transform: translateX(var(--bym-switch-travel));
   background: var(--bym-accent-fg);
 }
 
@@ -258,7 +263,7 @@
 }
 
 .bym-status--ok {
-  color: #2e9e5b;
+  color: var(--ym-message-color-successful-text-enabled, #2e9e5b);
 }
 
 .bym-status--error {
@@ -274,14 +279,11 @@
 
 /* ---------- Inline block on the YM settings page ---------- */
 
-.bym-settings {
-  padding: 8px 0 4px;
-}
-
 .bym-settings__heading {
-  margin: 0 0 4px;
-  font-size: 12px;
-  font-weight: 700;
+  margin: 0;
+  padding: 0 0 var(--bym-row-pad-top);
+  font-size: var(--bym-desc-size);
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--bym-fg-dim);
@@ -298,14 +300,14 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  padding: 14px 4px;
+  padding: var(--bym-row-pad-top) 0 var(--bym-row-pad-bottom);
   border: 0;
-  border-top: 1px solid var(--bym-border);
   background: transparent;
   color: var(--bym-fg);
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--bym-label-size);
+  font-weight: var(--bym-label-weight);
+  line-height: var(--bym-label-lh);
   text-align: left;
   cursor: pointer;
 }

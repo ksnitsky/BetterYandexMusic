@@ -1,7 +1,5 @@
 <script lang="ts">
   import { settings } from '../lib/settings.svelte';
-  import { getTweaks } from '../lib/tweaks.svelte';
-  import Toggle from './Toggle.svelte';
 
   interface Props {
     onclose: () => void;
@@ -14,8 +12,6 @@
   }
 
   let { onclose }: Props = $props();
-
-  const tweaks = getTweaks();
 
   let importText = $state(settings.serialize());
   let status = $state<Status | null>(null);
@@ -112,22 +108,6 @@
     </header>
 
     <div class="bym-dialog__body">
-      <section class="bym-section">
-        <h3 class="bym-section__title">Твики</h3>
-        {#each tweaks as tweak (tweak.id)}
-          <Toggle
-            checked={settings.tweaks[tweak.id]}
-            label={tweak.label}
-            description={tweak.description}
-            onchange={(checked) => settings.set(tweak.id, checked)}
-          />
-        {/each}
-        <p class="bym-hint">
-          Изменения применяются сразу. Слайдер громкости и порядок кнопок могут
-          вернуться после перезагрузки страницы — просто включите твик снова.
-        </p>
-      </section>
-
       <section class="bym-section">
         <h3 class="bym-section__title">Экспорт / импорт</h3>
         <div class="bym-actions">

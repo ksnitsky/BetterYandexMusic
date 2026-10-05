@@ -13,9 +13,10 @@ export interface BetterYmApp {
  */
 export function createShadowHost(
   id: string,
+  tag: 'div' | 'li' = 'div',
   css: string = appCss,
-): { host: HTMLDivElement; target: HTMLDivElement } {
-  const host = document.createElement('div');
+): { host: HTMLElement; target: HTMLDivElement } {
+  const host = document.createElement(tag);
   host.id = id;
 
   const shadow = host.attachShadow({ mode: 'open' });
