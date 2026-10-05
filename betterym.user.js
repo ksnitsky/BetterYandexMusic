@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Yandex Music Horizontal Volume Scroll
-// @namespace    ymhvs
+// @name         Better Yandex Music
+// @namespace    betterym
 // @version      1.2.0
 // @description  A userscript to bring back the good old horizontal volume slider and position of like/dislike buttons.
 // @author       Snitsky
 // @match        *://music.yandex.ru/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=yandex.ru
-// @homepageURL  https://github.com/ksnitsky/Yandex-Music-Horizontal-Volume-Scroll
-// @downloadURL  https://raw.githubusercontent.com/ksnitsky/Yandex-Music-Horizontal-Volume-Scroll/main/ymhvs.user.js
-// @updateURL    https://raw.githubusercontent.com/ksnitsky/Yandex-Music-Horizontal-Volume-Scroll/main/ymhvs.user.js
+// @homepageURL  https://github.com/ksnitsky/BetterYandexMusic
+// @downloadURL  https://raw.githubusercontent.com/ksnitsky/BetterYandexMusic/main/betterym.user.js
+// @updateURL    https://raw.githubusercontent.com/ksnitsky/BetterYandexMusic/main/betterym.user.js
 // @grant        none
 // ==/UserScript==
 
@@ -20,7 +20,7 @@
       "section[aria-labelledby='player-region']",
     );
     if (!player_section) {
-      console.log("[YMHVS] Ожидание player_section...");
+      console.log("[BETTERYM] Ожидание player_section...");
       return false;
     }
 
@@ -40,13 +40,13 @@
     volume_slider.style.minWidth = "unset";
     volume_slider.style.maxWidth = "7rem";
 
-    console.log("[YMHVS] Volume slider инициализирован");
+    console.log("[BETTERYM] Volume slider инициализирован");
     return true;
   }
 
   const sliderObserver = new MutationObserver(() => {
     if (initVolumeSlider()) {
-      console.log("[YMHVS] sliderObserver отключён");
+      console.log("[BETTERYM] sliderObserver отключён");
       sliderObserver.disconnect();
     }
   });
@@ -59,7 +59,7 @@
     );
     if (!playerBar) {
       console.log(
-        "[YMHVS] Ожидание PlayerBarDesktopWithBackgroundProgressBar_sonata...",
+        "[BETTERYM] Ожидание PlayerBarDesktopWithBackgroundProgressBar_sonata...",
       );
       return false;
     }
@@ -69,13 +69,13 @@
       if (className.includes("_withReversedControls")) {
         playerBar.classList.remove(className);
         removedCount++;
-        console.log("[YMHVS] Удалён класс:", className);
+        console.log("[BETTERYM] Удалён класс:", className);
       }
     });
 
     if (removedCount > 0) {
       console.log(
-        "[YMHVS] flex-direction исправлен (удалено классов:",
+        "[BETTERYM] flex-direction исправлен (удалено классов:",
         removedCount + ")",
       );
     }
@@ -84,7 +84,7 @@
 
   const controlsObserver = new MutationObserver(() => {
     if (removeReversedControlsClass()) {
-      console.log("[YMHVS] controlsObserver отключён");
+      console.log("[BETTERYM] controlsObserver отключён");
       controlsObserver.disconnect();
     }
   });
@@ -103,9 +103,9 @@
         if (!skipDislikeConfirm && !confirm("Вы уверены, что хотите добавить трек в дизлайки?")) {
           e.preventDefault();
           e.stopImmediatePropagation();
-          console.log("[YMHVS] Dislike отменён");
+          console.log("[BETTERYM] Dislike отменён");
         } else {
-          console.log("[YMHVS] Dislike подтверждён");
+          console.log("[BETTERYM] Dislike подтверждён");
         }
       }
     },
@@ -121,9 +121,9 @@
         if (!confirm("Вы уверены, что хотите добавить трек в дизлайки?")) {
           e.preventDefault();
           e.stopImmediatePropagation();
-          console.log("[YMHVS] Dislike хоткей отменён");
+          console.log("[BETTERYM] Dislike хоткей отменён");
         } else {
-          console.log("[YMHVS] Dislike хоткей подтверждён");
+          console.log("[BETTERYM] Dislike хоткей подтверждён");
           skipDislikeConfirm = true;
           dislikeButton.click();
           skipDislikeConfirm = false;
@@ -132,5 +132,5 @@
     }
   });
 
-  console.log("[YMHVS] Скрипт запущен, ожидание элементов DOM...");
+  console.log("[BETTERYM] Скрипт запущен, ожидание элементов DOM...");
 })();
