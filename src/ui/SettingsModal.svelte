@@ -72,7 +72,7 @@
 >
   <div class="bym-dialog" role="dialog" aria-modal="true" aria-label="Better Yandex Music">
     <header class="bym-dialog__header">
-      <h2 class="bym-dialog__title">Better Yandex Music</h2>
+      <h2 class="bym-dialog__title">{messages.exportImport}</h2>
       <button
         class="bym-dialog__close"
         type="button"
@@ -84,26 +84,23 @@
     </header>
 
     <div class="bym-dialog__body">
-      <section class="bym-section">
-        <h3 class="bym-section__title">{messages.exportImport}</h3>
-        <div class="bym-actions">
-          <button class="bym-btn bym-btn--primary" type="button" onclick={backup}>
-            {messages.backup}
-          </button>
-          <button class="bym-btn" type="button" onclick={() => fileInput?.click()}>
-            {messages.importSettings}
-          </button>
-          <button class="bym-btn bym-btn--danger" type="button" onclick={reset}>
-            {messages.resetDefaults}
-          </button>
-        </div>
+      <div class="bym-actions">
+        <button class="bym-btn bym-btn--primary" type="button" onclick={backup}>
+          {messages.backup}
+        </button>
+        <button class="bym-btn" type="button" onclick={() => fileInput?.click()}>
+          {messages.importSettings}
+        </button>
+        <button class="bym-btn bym-btn--danger" type="button" onclick={reset}>
+          {messages.resetDefaults}
+        </button>
+      </div>
 
-        {#if status}
-          <p class="bym-status bym-status--{status.kind}" role="status">
-            {status.text}
-          </p>
-        {/if}
-      </section>
+      {#if status}
+        <p class="bym-status bym-status--{status.kind}" role="status">
+          {status.text}
+        </p>
+      {/if}
     </div>
   </div>
 </div>

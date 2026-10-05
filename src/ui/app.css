@@ -53,72 +53,64 @@
   justify-content: center;
   padding: 24px;
   background: var(--ym-background-color-primary-enabled-overlay, rgba(0, 0, 0, 0.5));
-  backdrop-filter: blur(2px);
 }
 
 .bym-dialog {
-  width: min(520px, 100%);
+  position: relative;
+  width: min(528px, 92vw);
   max-height: min(86vh, 760px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bym-bg);
-  border: 1px solid var(--bym-border);
-  border-radius: var(--bym-radius);
-  box-shadow: var(--bym-shadow);
+  background: var(--ym-background-color-primary-enabled-popover, var(--bym-bg));
+  border: 1px solid var(--ym-outline-color-primary-disabled, var(--bym-border));
+  border-radius: var(--ym-radius-size-xl, 16px);
+  box-shadow:
+    0 1px 24px var(--ym-shadow-modal-xl, rgba(0, 0, 0, 0.48)),
+    0 -1px 24px var(--ym-shadow-modal-s, rgba(0, 0, 0, 0.24));
 }
 
 .bym-dialog__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--bym-border);
+  padding: var(--ym-spacer-size-xxl, 24px) var(--ym-spacer-size-xl, 20px) 0;
 }
 
 .bym-dialog__title {
   margin: 0;
-  font-size: 17px;
-  font-weight: 700;
   flex: 1;
+  font-family: var(--ym-font-heading, var(--bym-font));
+  font-size: var(--ym-font-size-headline-s, 1.375rem);
+  font-weight: var(--ym-font-weight-bold, 700);
+  line-height: 1.25;
+  color: var(--bym-fg);
 }
 
 .bym-dialog__close {
-  width: 32px;
-  height: 32px;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--bym-fg-dim);
-  font-size: 20px;
+  border-radius: 50%;
+  background: var(--ym-controls-color-secondary-default-enabled, var(--bym-bg-soft));
+  color: var(--bym-fg);
+  font-size: 22px;
   line-height: 1;
   cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
 .bym-dialog__close:hover {
-  background: var(--bym-bg-soft);
-  color: var(--bym-fg);
+  background: var(--ym-controls-color-secondary-default-hovered, rgba(0, 0, 0, 0.1));
 }
 
 .bym-dialog__body {
-  padding: 8px 20px 20px;
+  padding: var(--ym-spacer-size-xl, 20px);
   overflow-y: auto;
-}
-
-.bym-section {
-  margin-top: 18px;
-}
-
-.bym-section__title {
-  margin: 0 0 8px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--bym-fg-dim);
 }
 
 /* ---------- Toggle ---------- */
@@ -185,12 +177,16 @@
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.bym-toggle input:checked + .bym-switch {
-  background: var(--bym-accent);
-}
-
 .bym-toggle__control:hover input:not(:checked) + .bym-switch {
   background: var(--ym-controls-color-secondary-default-hovered, rgba(0, 0, 0, 0.1));
+}
+
+.bym-toggle__control:hover input:not(:checked) + .bym-switch::after {
+  background: var(--ym-controls-color-secondary-on_default-hovered, #e6e6e6);
+}
+
+.bym-toggle input:checked + .bym-switch {
+  background: var(--bym-accent);
 }
 
 .bym-toggle input:checked + .bym-switch::after {
@@ -244,26 +240,6 @@
 
 /* ---------- Export / import ---------- */
 
-.bym-textarea {
-  width: 100%;
-  min-height: 120px;
-  margin-top: 10px;
-  padding: 10px 12px;
-  resize: vertical;
-  border: 1px solid var(--bym-border);
-  border-radius: 10px;
-  background: var(--bym-bg-soft);
-  color: var(--bym-fg);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.bym-textarea:focus-visible {
-  outline: 2px solid var(--bym-accent);
-  outline-offset: 1px;
-}
-
 .bym-status {
   margin-top: 10px;
   font-size: 12px;
@@ -277,13 +253,6 @@
 
 .bym-status--error {
   color: var(--bym-danger);
-}
-
-.bym-hint {
-  margin: 10px 0 0;
-  font-size: 12px;
-  color: var(--bym-fg-dim);
-  line-height: 1.5;
 }
 
 /* ---------- Inline block on the YM settings page ---------- */
@@ -319,10 +288,6 @@
   line-height: var(--bym-label-lh);
   text-align: left;
   cursor: pointer;
-}
-
-.bym-settings__action:hover {
-  opacity: 0.7;
 }
 
 .bym-settings__action:focus-visible {

@@ -1,13 +1,23 @@
 import { registerTweak } from '../lib/tweaks.svelte';
+import { findIconButton, iconHref, isInPlayerBar } from '../lib/dom';
 
-const DISLIKE_SELECTOR = 'button[aria-label="I don\'t like it"]';
+const DISLIKE_ICON = '#dislike_xs';
 const CONFIRM_TEXT = 'Вы уверены, что хотите добавить трек в дизлайки?';
 
 let active = false;
 let skipNextClick = false;
 
+function isDislikeButton(el: Element | null | undefined): boolean {
+  return !!el && el.tagName === 'BUTTON' && iconHref(el).endsWith(DISLIKE_ICON);
+}
+
+/** Prefer the dislike button inside a player bar; fall back to any of them. */
 function findDislikeButton(): HTMLElement | null {
-  return document.querySelector<HTMLElement>(DISLIKE_SELECTOR);
+  for (const scope of Array.from(document.querySelectorAll('[class*="PlayerBar"]'))) {
+    const button = findIconButton(scope, DISLIKE_ICON);
+    if (button) return button;
+  }
+  return null;
 }
 
 /** Don't hijack the hotkey while the user is typing in a field. */
@@ -22,8 +32,8 @@ function isEditable(target: EventTarget | null): boolean {
 }
 
 function onClick(event: MouseEvent): void {
-  const button = (event.target as Element | null)?.closest?.(DISLIKE_SELECTOR);
-  if (!button) return;
+  const button = (event.target as Element | null)?.closest?.('button');
+  if (!isDislikeButton(button)) return;
 
   // Click triggered programmatically by the hotkey: already confirmed.
   if (skipNextClick) {
@@ -46,7 +56,7 @@ function onKeydown(event: KeyboardEvent): void {
   if (isEditable(event.target)) return;
 
   const button = findDislikeButton();
-  if (!button) return;
+  if (!button || !isInPlayerBar(button)) return;
 
   if (!confirm(CONFIRM_TEXT)) {
     event.preventDefault();

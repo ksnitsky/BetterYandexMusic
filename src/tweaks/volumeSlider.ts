@@ -1,6 +1,7 @@
 import { registerTweak } from '../lib/tweaks.svelte';
 
-const SLIDER_SELECTOR = "input[aria-label='Manage volume']";
+const PLAYER_SECTION_SELECTOR = "section[aria-labelledby='player-region']";
+const SLIDER_SELECTOR = '[class*="ChangeVolume_root"] input[type="range"]';
 
 interface VolumeNodes {
   /** Element that holds both the (now inline) slider and the volume button. */
@@ -21,7 +22,11 @@ interface SavedState extends VolumeNodes {
 let saved: SavedState | null = null;
 
 function findSlider(): HTMLInputElement | null {
-  return document.querySelector<HTMLInputElement>(SLIDER_SELECTOR);
+  // Only the bottom player bar. The Vibe page has its own ChangeVolume widget
+  // in its header that must keep its native (vertical popup) behavior.
+  const section = document.querySelector(PLAYER_SECTION_SELECTOR);
+  if (!section) return null;
+  return section.querySelector<HTMLInputElement>(SLIDER_SELECTOR);
 }
 
 /**
