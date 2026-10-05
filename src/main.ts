@@ -5,15 +5,15 @@ import './tweaks/dislikeConfirm';
 import { settings } from './lib/settings.svelte';
 import { startTweaks } from './lib/tweaks.svelte';
 import { mountApp } from './ui/mount';
+import { startSettingsPage } from './ui/settingsPage';
 
 function boot(): void {
   settings.load();
   startTweaks();
 
   const app = mountApp();
+  startSettingsPage(app.openSettings);
 
-  // Temporary handle: lets an external trigger (e.g. the user menu icon) open
-  // the modal until we wire it to the real element.
   (window as unknown as { betterym?: unknown }).betterym = app;
 
   console.log('[BETTERYM] Готово');
