@@ -128,6 +128,11 @@
   align-items: center;
   gap: 14px;
   padding: var(--bym-row-pad-top) var(--bym-row-pad-x) var(--bym-row-pad-bottom);
+}
+
+.bym-toggle__control {
+  display: inline-flex;
+  flex: 0 0 auto;
   cursor: pointer;
 }
 
@@ -182,6 +187,10 @@
 
 .bym-toggle input:checked + .bym-switch {
   background: var(--bym-accent);
+}
+
+.bym-toggle__control:hover input:not(:checked) + .bym-switch {
+  background: var(--ym-controls-color-secondary-default-hovered, rgba(0, 0, 0, 0.1));
 }
 
 .bym-toggle input:checked + .bym-switch::after {
@@ -322,7 +331,14 @@
 }
 
 .bym-settings__arrow {
-  font-size: 20px;
-  line-height: 1;
+  flex: 0 0 auto;
+  width: var(--bym-arrow-size, 20px);
+  height: var(--bym-arrow-size, 20px);
+  fill: var(--bym-fg-dim);
   color: var(--bym-fg-dim);
+  transition: transform var(--ym-duration-transition, 0.3s) ease;
+}
+
+.bym-settings__action:hover .bym-settings__arrow {
+  transform: translateX(7px);
 }

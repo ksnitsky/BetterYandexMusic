@@ -10,13 +10,27 @@ export interface TweakText {
 export interface Messages {
   heading: string;
   exportImport: string;
+  backup: string;
+  importSettings: string;
+  resetDefaults: string;
+  statusBackup: string;
+  statusImported: string;
+  statusImportError: string;
+  statusReset: string;
   tweaks: Record<TweakId, TweakText>;
 }
 
 export const MESSAGES: Record<Lang, Messages> = {
   ru: {
     heading: 'Настройки Better Yandex Music',
-    exportImport: 'Экспорт / импорт',
+    exportImport: 'Экспорт / импорт настроек',
+    backup: 'Резервная копия',
+    importSettings: 'Импорт настроек',
+    resetDefaults: 'Сбросить настройки',
+    statusBackup: 'Резервная копия сохранена',
+    statusImported: 'Настройки импортированы',
+    statusImportError: 'Не удалось импортировать: некорректный файл',
+    statusReset: 'Настройки сброшены по умолчанию',
     tweaks: {
       volumeSlider: {
         label: 'Горизонтальный слайдер громкости',
@@ -34,7 +48,14 @@ export const MESSAGES: Record<Lang, Messages> = {
   },
   en: {
     heading: 'Better Yandex Music settings',
-    exportImport: 'Export / import',
+    exportImport: 'Export / import settings',
+    backup: 'Backup',
+    importSettings: 'Import settings',
+    resetDefaults: 'Reset to defaults',
+    statusBackup: 'Backup saved',
+    statusImported: 'Settings imported',
+    statusImportError: 'Import failed: invalid file',
+    statusReset: 'Reset to defaults',
     tweaks: {
       volumeSlider: {
         label: 'Horizontal volume slider',

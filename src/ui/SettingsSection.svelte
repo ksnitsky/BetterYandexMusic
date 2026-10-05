@@ -30,7 +30,9 @@
 
     <button class="bym-settings__action" type="button" onclick={onopen}>
       <span>{messages.exportImport}</span>
-      <span class="bym-settings__arrow" aria-hidden="true">›</span>
+      <svg class="bym-settings__arrow" focusable="false" aria-hidden="true">
+        <use href="/icons/sprite.svg#arrowRight_xs"></use>
+      </svg>
     </button>
   </div>
 </section>

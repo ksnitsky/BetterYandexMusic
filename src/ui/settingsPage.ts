@@ -51,6 +51,11 @@ function sampleMetrics(): Record<string, string> {
     vars['--bym-row-pad-bottom'] = getComputedStyle(item).paddingBottom;
   }
 
+  const icon = document.querySelector<SVGSVGElement>('svg[class*="SettingsListButtonItem_icon"]');
+  if (icon) {
+    vars['--bym-arrow-size'] = `${icon.getBoundingClientRect().width}px`;
+  }
+
   const sw = q(SWITCH_SELECTOR);
   if (sw) {
     const box = sw.getBoundingClientRect();
